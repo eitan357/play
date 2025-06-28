@@ -1,10 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { createPageUrl } from "@/utils";
-import { Script } from "@/entities/all";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { createPageUrl } from "../utils";
+import { Script } from "../entities/all";
+import { Button } from "../components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../components/ui/card";
+import { Badge } from "../components/ui/badge";
 import {
   ArrowLeft,
   Play,
@@ -21,6 +26,29 @@ export default function ScriptDetail() {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedCharacter, setSelectedCharacter] = useState("");
 
+  const loadScript = useCallback(
+    async (scriptId) => {
+      try {
+        const scripts = await Script.list();
+        const foundScript = scripts.find((s) => s.id === scriptId);
+        if (foundScript) {
+          setScript(foundScript);
+          if (foundScript.characters?.length > 0) {
+            setSelectedCharacter(foundScript.characters[0]);
+          }
+        } else {
+          navigate(createPageUrl("Scripts"));
+        }
+      } catch (error) {
+        console.error("Error loading script:", error);
+        navigate(createPageUrl("Scripts"));
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [navigate]
+  );
+
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const scriptId = urlParams.get("id");
@@ -29,27 +57,7 @@ export default function ScriptDetail() {
     } else {
       navigate(createPageUrl("Scripts"));
     }
-  }, [navigate]);
-
-  const loadScript = async (scriptId) => {
-    try {
-      const scripts = await Script.list();
-      const foundScript = scripts.find((s) => s.id === scriptId);
-      if (foundScript) {
-        setScript(foundScript);
-        if (foundScript.characters?.length > 0) {
-          setSelectedCharacter(foundScript.characters[0]);
-        }
-      } else {
-        navigate(createPageUrl("Scripts"));
-      }
-    } catch (error) {
-      console.error("Error loading script:", error);
-      navigate(createPageUrl("Scripts"));
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  }, [navigate, loadScript]);
 
   const startRehearsal = () => {
     if (script && selectedCharacter) {

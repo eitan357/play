@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { RehearsalSession, Script } from "@/entities/all";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { RehearsalSession } from "../entities/all";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../components/ui/card";
+import { Badge } from "../components/ui/badge";
 import {
   TrendingUp,
-  Calendar,
   Target,
   Clock,
   Star,
@@ -24,7 +28,6 @@ import {
 
 export default function Performance() {
   const [sessions, setSessions] = useState([]);
-  const [scripts, setScripts] = useState([]);
   const [stats, setStats] = useState({
     totalSessions: 0,
     averageAccuracy: 0,
@@ -39,13 +42,9 @@ export default function Performance() {
 
   const loadPerformanceData = async () => {
     try {
-      const [sessionList, scriptList] = await Promise.all([
-        RehearsalSession.list("-session_date"),
-        Script.list(),
-      ]);
+      const sessionList = await RehearsalSession.list("-session_date");
 
       setSessions(sessionList);
-      setScripts(scriptList);
 
       // Calculate stats
       const totalSessions = sessionList.length;

@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { createPageUrl } from "@/utils";
-import { Script } from "@/entities/all";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { createPageUrl } from "../utils";
+import { Script } from "../entities/all";
+import { Button } from "../components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../components/ui/card";
+import { Badge } from "../components/ui/badge";
 import {
   Plus,
   FileText,
@@ -15,7 +20,7 @@ import {
   Upload,
 } from "lucide-react";
 import { motion } from "framer-motion";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "../components/ui/skeleton";
 
 export default function Scripts() {
   const [scripts, setScripts] = useState([]);

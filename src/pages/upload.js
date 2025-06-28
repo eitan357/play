@@ -1,17 +1,22 @@
 import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { createPageUrl } from "@/utils";
-import { Script } from "@/entities/all";
+import { createPageUrl } from "../utils";
+import { Script } from "../entities/all";
 import {
   UploadFile,
   ExtractDataFromUploadedFile,
   InvokeLLM,
-} from "@/integrations/Core";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+} from "../integrations/Core";
+import { Button } from "../components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../components/ui/card";
+import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
+import { Alert, AlertDescription } from "../components/ui/alert";
 import {
   Upload as UploadIcon,
   Camera,

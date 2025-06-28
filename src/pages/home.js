@@ -1,17 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { createPageUrl } from "@/utils";
-import { Script, RehearsalSession } from "@/entities/all";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { createPageUrl, clearAllLineCoachData } from "../utils";
+import { Script, RehearsalSession } from "../entities/all";
+import { Button } from "../components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../components/ui/card";
 import {
   Upload,
   BookOpen,
   Mic,
   TrendingUp,
-  Clock,
   Target,
   Star,
+  Trash2,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -22,7 +27,6 @@ export default function Home() {
     averageAccuracy: 0,
     recentSessions: [],
   });
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     loadDashboardData();
@@ -49,8 +53,18 @@ export default function Home() {
       });
     } catch (error) {
       console.error("Error loading dashboard:", error);
-    } finally {
-      setIsLoading(false);
+    }
+  };
+
+  const handleClearData = () => {
+    if (
+      window.confirm(
+        "Are you sure you want to clear all data? This will remove all scripts and rehearsal sessions."
+      )
+    ) {
+      clearAllLineCoachData();
+      loadDashboardData(); // Reload the dashboard to reflect the changes
+      alert("All data has been cleared!");
     }
   };
 

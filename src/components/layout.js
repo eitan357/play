@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { createPageUrl } from "@/utils";
-import { Theater, Upload, BookOpen, Mic, BarChart3, Home } from "lucide-react";
+import { createPageUrl } from "../utils";
+import { Theater, Upload, BookOpen, BarChart3, Home } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -14,7 +14,8 @@ import {
   SidebarHeader,
   SidebarProvider,
   SidebarTrigger,
-} from "@/components/ui/sidebar";
+  useSidebar,
+} from "./ui/sidebar";
 
 const navigationItems = [
   {
@@ -44,38 +45,11 @@ export default function Layout({ children, currentPageName }) {
 
   return (
     <SidebarProvider>
-      <style>{`
-        :root {
-          --theater-burgundy: #722F37;
-          --theater-gold: #D4AF37;
-          --theater-cream: #FDF6E3;
-          --theater-charcoal: #2C2C2C;
-          --theater-silver: #C0C0C0;
-        }
-        
-        body {
-          font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-          background: linear-gradient(135deg, var(--theater-cream) 0%, #F8F4E6 100%);
-        }
-        
-        .theater-gradient {
-          background: linear-gradient(135deg, var(--theater-burgundy) 0%, #8B3A42 100%);
-        }
-        
-        .gold-accent {
-          background: linear-gradient(135deg, var(--theater-gold) 0%, #E6C547 100%);
-        }
-        
-        .curtain-shadow {
-          box-shadow: 0 8px 32px rgba(114, 47, 55, 0.15);
-        }
-      `}</style>
-
       <div className="min-h-screen flex w-full">
-        <Sidebar className="border-r border-gray-200/50 bg-white/80 backdrop-blur-sm">
+        <Sidebar className="border-r border-gray-200/50 bg-white">
           <SidebarHeader className="border-b border-gray-200/50 p-6">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 theater-gradient rounded-xl flex items-center justify-center curtain-shadow">
+              <div className="w-10 h-10 bg-gradient-to-br from-red-700 to-amber-600 rounded-xl flex items-center justify-center shadow-lg">
                 <Theater className="w-6 h-6 text-white" />
               </div>
               <div>
@@ -96,22 +70,19 @@ export default function Layout({ children, currentPageName }) {
                 <SidebarMenu className="space-y-1">
                   {navigationItems.map((item) => (
                     <SidebarMenuItem key={item.title}>
-                      <SidebarMenuButton
-                        asChild
-                        className={`hover:bg-gradient-to-r hover:from-red-50 hover:to-amber-50 hover:text-red-700 transition-all duration-300 rounded-xl py-3 ${
+                      <Link
+                        to={item.url}
+                        className={`block w-full hover:bg-gradient-to-r hover:from-red-50 hover:to-amber-50 hover:text-red-700 transition-all duration-300 rounded-xl py-3 ${
                           location.pathname === item.url
                             ? "bg-gradient-to-r from-red-50 to-amber-50 text-red-700 shadow-sm"
                             : ""
                         }`}
                       >
-                        <Link
-                          to={item.url}
-                          className="flex items-center gap-3 px-4"
-                        >
+                        <div className="flex items-center gap-3 px-4">
                           <item.icon className="w-5 h-5" />
                           <span className="font-medium">{item.title}</span>
-                        </Link>
-                      </SidebarMenuButton>
+                        </div>
+                      </Link>
                     </SidebarMenuItem>
                   ))}
                 </SidebarMenu>
@@ -119,6 +90,8 @@ export default function Layout({ children, currentPageName }) {
             </SidebarGroup>
           </SidebarContent>
         </Sidebar>
+
+        <MobileOverlay />
 
         <main className="flex-1 flex flex-col">
           <header className="bg-white/60 backdrop-blur-sm border-b border-gray-200/50 px-6 py-4 md:hidden">
@@ -135,5 +108,19 @@ export default function Layout({ children, currentPageName }) {
         </main>
       </div>
     </SidebarProvider>
+  );
+}
+
+// Mobile overlay component
+function MobileOverlay() {
+  const { isOpen, setIsOpen } = useSidebar();
+
+  if (!isOpen) return null;
+
+  return (
+    <div
+      className="fixed inset-0 bg-black/20 z-40 lg:hidden"
+      onClick={() => setIsOpen(false)}
+    />
   );
 }
